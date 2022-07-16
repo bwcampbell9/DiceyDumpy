@@ -9,11 +9,11 @@ public class Fart : MonoBehaviour
     public Rigidbody rb;
     public bool isFarting = false;
     private float timeFarting;
+    public ParticleSystem fartCloud;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -35,8 +35,12 @@ public class Fart : MonoBehaviour
         {
             timeFarting += Time.deltaTime;
 
+            int numParticles = Random.Range(1, 5);
+            fartCloud.Emit(numParticles);
+
             if (timeFarting >= duration)
             {
+
                 isFarting = false;
                 return;
             }
@@ -47,6 +51,7 @@ public class Fart : MonoBehaviour
 
     void fart()
     {
+        fartCloud.Emit(50);
         timeFarting = 0;
         isFarting = true;
     }
