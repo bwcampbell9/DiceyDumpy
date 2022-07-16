@@ -4,30 +4,49 @@ using UnityEngine;
 
 public class Attractor : MonoBehaviour
 {
-    public Rigidbody rb;
 
-    private void FixedUpdate()
-    {
-        Attractor[] attractors = FindObjectsOfType<Attractor>();
-        foreach (Attractor attractor in attractors)
-        {
-            if(attractor != this)
-            {
-                Attract(attractor);
-            }
-        }
-    }
-    void Attract(Attractor other)
-    {
-        Rigidbody otherRB = other.rb;
+	const float G = 66.74f;
 
-        Vector3 direction = rb.position - otherRB.position;
-        float distance = direction.magnitude;
+	public static List<Attractor> Attractors;
 
-        float forceMagnitude = (rb.mass * otherRB.mass) / Mathf.Pow(distance, 2);
+	public Rigidbody rb;
 
-        Vector3 force = direction.normalized * forceMagnitude;
+	void FixedUpdate()
+	{
+		foreach (Attractor attractor in Attractors)
+		{
+			if (attractor != this)
+				Attract(attractor);
+		}
+	}
 
-        otherRB.AddForce(force);
-    }
+	void OnEnable()
+	{
+		if (Attractors == null)
+			Attractors = new List<Attractor>();
+
+		Attractors.Add(this);
+	}
+
+	void OnDisable()
+	{
+		Attractors.Remove(this);
+	}
+
+	void Attract(Attractor objToAttract)
+	{
+		Rigidbody rbToAttract = objToAttract.rb;
+
+		Vector3 direction = rb.position - rbToAttract.position;
+		float distance = direction.magnitude;
+
+		if (distance == 0f)
+			return;
+
+		float forceMagnitude = G * (rb.mass * rbToAttract.mass) / Mathf.Pow(distance, 2);
+		Vector3 force = direction.normalized * forceMagnitude;
+
+		rbToAttract.AddForce(force);
+	}
+
 }
