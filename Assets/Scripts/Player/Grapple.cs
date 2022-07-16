@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class Grapple : MonoBehaviour
 {
     private LineRenderer lr;
@@ -22,7 +23,6 @@ public class Grapple : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("start Grapple");
             StartGrapple();
         }
         else if (Input.GetMouseButtonUp(0))
@@ -30,7 +30,6 @@ public class Grapple : MonoBehaviour
             StopGrapple();
         }
 
-        Debug.DrawLine(camera.transform.position, camera.forward, Color.red, 0.0f, false);
     }
 
     private void FixedUpdate()
@@ -38,7 +37,7 @@ public class Grapple : MonoBehaviour
 
         if (grappling)
         {
-            Vector3 direction = gunTip.position - grapplePoint;
+            Vector3 direction = grapplePoint - gunTip.position;
             float distance = direction.magnitude;
 
             float forceMagnitude = grappleSpeed;
@@ -64,8 +63,6 @@ public class Grapple : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxDistance, whatIsGrappleable))
         {
-            Debug.Log(hit);
-
             grapplePoint = hit.point;
 
             //float distanceFromPoint = Vector3.Distance(player.position, grapplePoint);
@@ -73,9 +70,6 @@ public class Grapple : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
             grappling = true;
-        } else
-        {
-            Debug.Log("No target");
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Attractor : MonoBehaviour
 {
 
@@ -10,6 +11,11 @@ public class Attractor : MonoBehaviour
 	public static List<Attractor> Attractors;
 
 	public Rigidbody rb;
+
+	void Awake()
+	{
+		rb = GetComponent<Rigidbody>();
+	}
 
 	void FixedUpdate()
 	{
