@@ -7,17 +7,14 @@ public class Player : MonoBehaviour
 {
     public float mouseSensitivity = 1000.0f;
     public float clampAngle = 80.0f;
-    public Transform objectToRotate;
+    public GameObject objectToRotate;
+    public float tapDelay = .3f;
 
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
     private float deadZone = .01f;
 
-    private Vector3 rotOffset = new Vector3 (0,0,0);
-    private Vector3 visualOffset = new Vector3 (0,0,0);
     private bool rotating = false;
-
-    private Vector3 XRot = new Vector3(90, 0, 0), YRot = new Vector3(0, 90, 0), ZRot = new Vector3(0, 0, 90);
 
     void Start()
     {
@@ -49,93 +46,46 @@ public class Player : MonoBehaviour
         {
             float horiz = Input.GetAxis("Horizontal");
             float vert = Input.GetAxis("Vertical");
-            if (horiz > deadZone)
+            if(!rotating)
             {
-                // Clockwise Y
-                rotating = true;
-                LeanTween.value(gameObject, updateValueExampleCallback, rotOffset, rotOffset + YRot, .6f).setEase(LeanTweenType.easeOutElastic).setOnComplete(onRotationComplete);
-                void updateValueExampleCallback(Vector3 val)
+                if (horiz > deadZone)
                 {
-                    visualOffset = val;
-                    Debug.Log("tweened value:" + visualOffset + " percent complete:" + rotOffset);
-                }
-                void onRotationComplete()
-                {
-                    rotating = false;
-                    rotOffset = visualOffset;
-                    //Adjust Axis
-                    Vector3 temp = XRot;
-                    XRot = ZRot;
-                    ZRot = temp;
-                }
-            }
-            else if (horiz < -deadZone)
-            {
-                // CounterClockwise Y
-                rotating = true;
-                LeanTween.value(gameObject, updateValueExampleCallback, rotOffset, rotOffset - YRot, .6f).setEase(LeanTweenType.easeOutElastic).setOnComplete(onRotationComplete);
-                void updateValueExampleCallback(Vector3 val)
-                {
-                    visualOffset = val;
-                    Debug.Log("tweened value:" + visualOffset + " percent complete:" + rotOffset);
-                }
-                void onRotationComplete()
-                {
-                    rotating = false;
-                    rotOffset = visualOffset;
-                    //Adjust Axis
-                    //Adjust Axis
-                    Vector3 temp = XRot;
-                    XRot = ZRot;
-                    ZRot = temp;
-                }
-            }
-
-            if (vert > deadZone)
-            {
-                // Clockwise X
-                rotating = true;
-                LeanTween.value(gameObject, updateValueExampleCallback, rotOffset, rotOffset + XRot, .6f).setEase(LeanTweenType.easeOutElastic).setOnComplete(onRotationComplete);
-                void updateValueExampleCallback(Vector3 val)
-                {
-                    visualOffset = val;
-                    Debug.Log("tweened value:" + visualOffset + " percent complete:" + rotOffset);
-                }
-                void onRotationComplete()
-                {
-                    rotating = false;
-                    rotOffset = visualOffset;
-                    //Adjust Axis
-
-                    //Adjust Axis
-                    Vector3 temp = YRot;
-                    ZRot = -YRot;
-                    YRot = temp;
-                }
-            }
-            else if (vert < -deadZone)
-            {
-                    // CounterClockwise X
                     rotating = true;
-                    LeanTween.value(gameObject, updateValueExampleCallback, rotOffset, rotOffset - XRot, .6f).setEase(LeanTweenType.easeOutElastic).setOnComplete(onRotationComplete);
-                    void updateValueExampleCallback(Vector3 val)
-                    {
-                        visualOffset = val;
-                        Debug.Log("tweened value:" + visualOffset + " percent complete:" + rotOffset);
-                    }
-                    void onRotationComplete()
-                    {
-                        rotating = false;
-                        rotOffset = visualOffset;
-                        //Adjust Axis
-                        //Adjust Axis
-                        Vector3 temp = -ZRot;
-                        ZRot = YRot;
-                        YRot = temp;
-                    }
+                    objectToRotate.transform.RotateAround(objectToRotate.transform.position, transform.up, 90);
+                    StartCoroutine(FalseAfterTime(tapDelay));
+                }
+                else if (horiz < -deadZone)
+                {
+                    rotating = true;
+                    objectToRotate.transform.RotateAround(objectToRotate.transform.position, transform.up, -90);
+                    StartCoroutine(FalseAfterTime(tapDelay));
+                }
+                else
+                {
+                    rotating = false;
+                }
+
+                if (vert > deadZone)
+                {
+                    rotating = true;
+                    objectToRotate.transform.RotateAround(objectToRotate.transform.position, transform.right, 90);
+                    StartCoroutine(FalseAfterTime(tapDelay));
+                }
+                else if (vert < -deadZone)
+                {
+                    rotating = true;
+                    objectToRotate.transform.RotateAround(objectToRotate.transform.position, transform.right, -90);
+                    StartCoroutine(FalseAfterTime(tapDelay));
+                }
             }
         }
 
-        objectToRotate.localRotation = Quaternion.Euler(visualOffset);
+        //objectToRotate.localRotation = Quaternion.Euler(visualOffset);
+    }
+
+    IEnumerator FalseAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        rotating = false;
     }
 }
