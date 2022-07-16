@@ -1251,6 +1251,7 @@ MonoBehaviour:
   mouseSensitivity: 400
   clampAngle: 80
   objectToRotate: {fileID: 512497638}
+  tapDelay: 0.3
 --- !u!4 &1734849755
 Transform:
   m_ObjectHideFlags: 0
