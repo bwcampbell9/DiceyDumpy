@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     public GameObject objectToRotate;
     public float tapDelay = .3f;
 
+    public int MAX_HEALTH = 100;
+    public int health;
+
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
     private float deadZone = .01f;
@@ -18,6 +21,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        health = MAX_HEALTH;
         Cursor.lockState = CursorLockMode.Locked;
         Vector3 rot = transform.localRotation.eulerAngles;
         rotY = rot.y;
