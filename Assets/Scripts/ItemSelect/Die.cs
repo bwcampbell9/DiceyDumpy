@@ -28,6 +28,11 @@ public class Die : MonoBehaviour
         return side;
     }
 
+    public DiceOption GetTopOption()
+    {
+        return sideOptions[GetSideUp()];
+    }
+
     public void SetSides(List<DiceOption> newSides)
     {
         sideOptions = newSides;

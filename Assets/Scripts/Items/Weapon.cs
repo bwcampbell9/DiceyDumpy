@@ -4,5 +4,4 @@ using UnityEngine;
 public class Weapon : DiceOption
 {
     public string weaponName;
-    public GameObject prefab;
 }

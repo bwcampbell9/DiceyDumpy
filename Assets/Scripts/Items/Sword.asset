@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   texture: {fileID: 2800000, guid: 78dd64b57442fa54abd18e5e7af7dfc2, type: 3}
   weaponName: Sword
-  prefab: {fileID: 0}
+  prefab: {fileID: 8140791722484211976, guid: aa3825ac8b0964145886a95f77225a93, type: 3}
