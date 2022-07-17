@@ -10,7 +10,7 @@ public class Gun : MonoBehaviour
     public float shootForce, upwardForce;
 
     //Gun stats
-    public float timeBetweenShooting, spread, reloadTime, timeBetweenShots;
+    public float timeBetweenShooting, spread, reloadTime;
     public int magazineSize, bulletsPerTap, damage, range;
     public bool allowButtonHold, isHitScan;
 
@@ -46,9 +46,12 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
+        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
         //Set ammo display, if it exists :D
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + " / " + magazineSize / bulletsPerTap);
+        
+        if (!reloading && bulletsLeft <= 0) Reload();
     }
     private void MyInput()
     {
@@ -58,8 +61,6 @@ public class Gun : MonoBehaviour
 
         //Reloading 
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
-        //Reload automatically when trying to shoot without ammo
-        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
 
         //Shooting
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
@@ -67,7 +68,7 @@ public class Gun : MonoBehaviour
             //Set bullets shot to 0
             bulletsShot = 0;
 
-            Shoot();
+            TryShoot();
         }
     }
 
@@ -78,81 +79,93 @@ public class Gun : MonoBehaviour
             //Set bullets shot to 0
             bulletsShot = 0;
 
-            Shoot();
+            //Find the exact hit position using a raycast
+            Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view
+            RaycastHit hit;
+
+            //check if ray hits something
+            Vector3 targetPoint;
+            if (Physics.Raycast(ray, out hit))
+                targetPoint = hit.point;
+            else
+                targetPoint = ray.GetPoint(75); //Just a point far away from the player
+
+            //Calculate direction from attackPoint to targetPoint
+            Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
+
+            Shoot(directionWithoutSpread);
         }
     }
 
-    private void Shoot()
+    public void TryShoot(Vector3 direction)
+    {
+        if (readyToShoot && !reloading && bulletsLeft > 0)
+        {
+            //Set bullets shot to 0
+            bulletsShot = 0;
+
+            Shoot(direction);
+        }
+    }
+
+    private void Shoot(Vector3 direction)
     {
         
-       readyToShoot = false;
-
-        //Find the exact hit position using a raycast
-        Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view
-        RaycastHit hit;
-
-        //check if ray hits something
-        Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit))
-            targetPoint = hit.point;
-        else
-            targetPoint = ray.GetPoint(75); //Just a point far away from the player
-
-        //Calculate direction from attackPoint to targetPoint
-        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
-
-        //Calculate spread
-        float x = Random.Range(-spread, spread);
-        float y = Random.Range(-spread, spread);
-
-        //Calculate new direction with spread
-        Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0); //Just add spread to last direction
-        if (isHitScan)
-        {
-            if (Physics.Raycast(fpsCam.transform.position, directionWithSpread, out rayHit, range, whatIsEnemy))
-            {
-                Debug.Log(rayHit.collider.name);
-
-                if (rayHit.collider.CompareTag("Enemy"))
-                    rayHit.collider.GetComponent<ShootingAi>().TakeDamage(damage);
-                Instantiate(bulletHoleGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
-                Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
-            }
-        }
-        else
-        {
-
-            Debug.Log("pew");
-            //Instantiate bullet/projectile
-            GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
-            //Rotate bullet to shoot direction
-            currentBullet.transform.forward = directionWithSpread.normalized;
-
-            //Add forces to bullet
-            currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
-            currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
-        }
-
-        //Instantiate muzzle flash, if you have one
-        if (muzzleFlash != null)
-            Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
-
-        bulletsLeft--;
-        bulletsShot++;
-
-        //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
-        if (allowInvoke)
-        {
-            Invoke("ResetShot", timeBetweenShooting);
-            allowInvoke = false;
-
-            //Add recoil to player (should only be called once)
-            playerRb.AddForce(-directionWithSpread.normalized * recoilForce, ForceMode.Impulse);
-        }
+        readyToShoot = false;
 
         //if more than one bulletsPerTap make sure to repeat shoot function
-        if (bulletsShot < bulletsPerTap && bulletsLeft > 0)
-            Invoke("Shoot", timeBetweenShots);
+        while (bulletsShot < bulletsPerTap && bulletsLeft > 0)
+        {
+            //Calculate spread
+            float x = Random.Range(-spread, spread);
+            float y = Random.Range(-spread, spread);
+
+            //Calculate new direction with spread
+            Vector3 directionWithSpread = direction + new Vector3(x, y, 0); //Just add spread to last direction
+            if (isHitScan)
+            {
+                if (Physics.Raycast(transform.position, directionWithSpread, out rayHit, range, whatIsEnemy))
+                {
+                    if (rayHit.collider.CompareTag("Enemy"))
+                        rayHit.collider.GetComponent<ShootingAi>().TakeDamage(damage);
+                    Instantiate(bulletHoleGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
+                    Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+                }
+            }
+            else
+            {
+
+                Debug.Log("pew");
+                //Instantiate bullet/projectile
+                GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
+                //Rotate bullet to shoot direction
+                currentBullet.transform.forward = directionWithSpread.normalized;
+
+                //Add forces to bullet
+                currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
+                currentBullet.GetComponent<Rigidbody>().AddForce(transform.up * upwardForce, ForceMode.Impulse);
+            }
+
+            //Instantiate muzzle flash, if you have one
+            if (muzzleFlash != null)
+                Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+
+            bulletsLeft--;
+            bulletsShot++;
+
+            //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
+            if (allowInvoke)
+            {
+                Invoke("ResetShot", timeBetweenShooting);
+                allowInvoke = false;
+
+                //Add recoil to player (should only be called once)
+                if (playerRb)
+                {
+                    playerRb.AddForce(-directionWithSpread.normalized * recoilForce, ForceMode.Impulse);
+                }
+            }
+        }
     }
     private void ResetShot()
     {

@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 
     public int MAX_HEALTH = 100;
     public int health;
+    public LayerMask bulletLayer;
 
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
@@ -85,6 +86,17 @@ public class Player : MonoBehaviour
         }
 
         //objectToRotate.localRotation = Quaternion.Euler(visualOffset);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision);
+        if (bulletLayer == (bulletLayer | (1 << collision.gameObject.layer)))
+        {
+            health -= collision.gameObject.GetComponent<Bullet>().explosionDamage;
+            Destroy(collision.gameObject);
+        }
+
     }
 
     IEnumerator FalseAfterTime(float time)

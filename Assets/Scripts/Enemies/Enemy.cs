@@ -5,10 +5,12 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float range;
+    public Gun gun;
+    public LayerMask sightBlockers;
 
     private Player player;
 
-    private GameObject target;
+    public GameObject target;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,23 +25,40 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, player.transform.position, out hit, range)) {
-            Player pl = hit.collider.gameObject.GetComponent<Player>();
+        Vector3 direction = player.transform.position - transform.position;
+        RaycastHit closestValidHit = new RaycastHit();
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, range, sightBlockers);
+        foreach (RaycastHit hit in hits)
+        {
+            if (!hit.transform.IsChildOf(transform) && (closestValidHit.collider == null || closestValidHit.distance > hit.distance))
+            {
+                closestValidHit = hit;
+            }
+        }
+        if (closestValidHit.collider != null)
+        {
+            Player pl = closestValidHit.transform.gameObject.GetComponent<Player>();
             if (pl != null)
             {
-                target = hit.collider.gameObject;
-            } else
+                target = closestValidHit.transform.gameObject;
+            }
+            else
             {
                 target = null;
             }
-        } else
+        }
+        else
         {
+            if(closestValidHit.collider != null)
+            {
+                Debug.Log(closestValidHit.collider.gameObject);
+            }
             target = null;
         }
         if(target)
         {
-            
+            transform.LookAt(target.transform.position);
+            gun.TryShoot(gun.transform.forward);
         }
     }
 

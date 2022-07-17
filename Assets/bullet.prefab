@@ -113,10 +113,10 @@ MonoBehaviour:
   explosion: {fileID: 0}
   whatIsEnemies:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1005
   bounciness: 1
   useGravity: 0
-  explosionDamage: 150
+  explosionDamage: 10
   explosionRange: 10
   explosionForce: 20
   maxCollisions: 2
