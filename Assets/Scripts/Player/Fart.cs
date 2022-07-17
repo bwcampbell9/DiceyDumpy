@@ -11,6 +11,10 @@ public class Fart : MonoBehaviour
     public bool isFarting = false;
     private float timeFarting;
     public ParticleSystem fartCloud;
+    public float chance = 0.01f;
+
+    float ellapsed = 0;
+    public float FREQUENCY = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +32,22 @@ public class Fart : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        ellapsed += Time.fixedDeltaTime;
+
+        if (ellapsed >= FREQUENCY)
+        {
+            ellapsed = 0;
+
+            if (Random.Range(0f, 1f) < chance)
+            {
+                fart();
+            }
+        }
+
         if (isFarting)
         {
-            timeFarting += Time.deltaTime;
+            timeFarting += Time.fixedDeltaTime;
 
             int numParticles = Random.Range(1, 5);
             fartCloud.Emit(numParticles);
