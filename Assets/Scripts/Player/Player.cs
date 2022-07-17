@@ -14,6 +14,33 @@ public class Player : MonoBehaviour
     public int health;
     public LayerMask bulletLayer;
 
+
+    public GameObject topPoint;
+    public GameObject leftPoint;
+    public GameObject rightPoint;
+
+    public GameObject[] gunObjs = new GameObject[3];
+    public Gun[] guns = new Gun[3];
+    public Weapon[] weapons = new Weapon[3];
+
+    public Side equippedSide;
+    public enum AttachmentPoints
+    {
+        rightPoint,
+        topPoint,
+        leftPoint,
+    }
+
+    public enum Side
+    {
+        right,
+        top,
+        left,
+        legs,
+        grapple,
+        ass
+    }
+
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
     private float deadZone = .01f;
@@ -43,6 +70,8 @@ public class Player : MonoBehaviour
         transform.rotation = localRotation;
 
         UpdateRotation();
+
+        equippedSide = (Side) GetSideForward();
     }
 
     void UpdateRotation()
@@ -99,9 +128,61 @@ public class Player : MonoBehaviour
 
     }
 
+    void attachGun(Weapon weapon, AttachmentPoints point)
+    {
+        int index = (int)point;
+        weapons[index] = weapon;
+
+        gunObjs[index] = Instantiate(weapon.prefab, new Vector3(0, 0, 0), new Quaternion());
+
+        if (point == AttachmentPoints.leftPoint)
+        {
+            gunObjs[index].transform.parent = leftPoint.transform;
+        }
+        else if (point == AttachmentPoints.topPoint)
+        {
+            gunObjs[index].transform.parent = topPoint.transform;
+        }
+        else
+        {
+            gunObjs[index].transform.parent = rightPoint.transform;
+        }
+        gunObjs[index].transform.localRotation = new Quaternion();
+        gunObjs[index].transform.localPosition = new Vector3(0, 0, 0);
+
+        guns[index] = gunObjs[index].GetComponent<Gun>();
+    }
     IEnumerator FalseAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
         rotating = false;
+    }
+
+    public int GetSideForward()
+    {
+        int side = GetIndexOfLowestValue(new[] {
+            Vector3.Angle(objectToRotate.transform.right, transform.forward),
+            Vector3.Angle(objectToRotate.transform.up, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.right, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.up, transform.forward),
+            Vector3.Angle(objectToRotate.transform.forward, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.forward, transform.forward),
+                });
+        return side;
+    }
+
+    private int GetIndexOfLowestValue(float[] arr)
+    {
+        float value = float.PositiveInfinity;
+        int index = -1;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i] < value)
+            {
+                index = i;
+                value = arr[i];
+            }
+        }
+        return index;
     }
 }
