@@ -46,8 +46,6 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        MyInput();
-
         //Set ammo display, if it exists :D
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + " / " + magazineSize / bulletsPerTap);
@@ -65,6 +63,17 @@ public class Gun : MonoBehaviour
 
         //Shooting
         if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        {
+            //Set bullets shot to 0
+            bulletsShot = 0;
+
+            Shoot();
+        }
+    }
+
+    public void TryShoot()
+    {
+        if (readyToShoot && !reloading && bulletsLeft > 0)
         {
             //Set bullets shot to 0
             bulletsShot = 0;
