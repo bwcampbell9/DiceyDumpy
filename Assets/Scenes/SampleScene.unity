@@ -894,7 +894,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5554833445420473410, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: duration
-      value: 0.01
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5554833445420473411, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: camera
