@@ -18,15 +18,26 @@ public class Player : MonoBehaviour
     public GameObject leftPoint;
     public GameObject rightPoint;
 
-    GameObject[] gunObjs = new GameObject[3];
-    Gun[] guns = new Gun[3];
-    Weapon[] weapons = new Weapon[3];
+    public GameObject[] gunObjs = new GameObject[3];
+    public Gun[] guns = new Gun[3];
+    public Weapon[] weapons = new Weapon[3];
 
-    enum AttachmentPoints
+    public Side equippedSide;
+    public enum AttachmentPoints
     {
         rightPoint,
         topPoint,
         leftPoint,
+    }
+
+    public enum Side
+    {
+        right,
+        top,
+        left,
+        legs,
+        grapple,
+        ass
     }
 
     private float rotY = 0.0f; // rotation around the up/y axis
@@ -58,6 +69,8 @@ public class Player : MonoBehaviour
         transform.rotation = localRotation;
 
         UpdateRotation();
+
+        equippedSide = (Side) GetSideForward();
     }
 
     void UpdateRotation()
@@ -131,5 +144,33 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         rotating = false;
+    }
+
+    public int GetSideForward()
+    {
+        int side = GetIndexOfLowestValue(new[] {
+            Vector3.Angle(objectToRotate.transform.right, transform.forward),
+            Vector3.Angle(objectToRotate.transform.up, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.right, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.up, transform.forward),
+            Vector3.Angle(objectToRotate.transform.forward, transform.forward),
+            Vector3.Angle(-objectToRotate.transform.forward, transform.forward),
+                });
+        return side;
+    }
+
+    private int GetIndexOfLowestValue(float[] arr)
+    {
+        float value = float.PositiveInfinity;
+        int index = -1;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i] < value)
+            {
+                index = i;
+                value = arr[i];
+            }
+        }
+        return index;
     }
 }
