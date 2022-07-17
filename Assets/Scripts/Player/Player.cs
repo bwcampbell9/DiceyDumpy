@@ -13,6 +13,22 @@ public class Player : MonoBehaviour
     public int MAX_HEALTH = 100;
     public int health;
 
+
+    public GameObject topPoint;
+    public GameObject leftPoint;
+    public GameObject rightPoint;
+
+    GameObject[] gunObjs = new GameObject[3];
+    Gun[] guns = new Gun[3];
+    Weapon[] weapons = new Weapon[3];
+
+    enum AttachmentPoints
+    {
+        rightPoint,
+        topPoint,
+        leftPoint,
+    }
+
     private float rotY = 0.0f; // rotation around the up/y axis
     private float rotX = 0.0f; // rotation around the right/x axis
     private float deadZone = .01f;
@@ -87,6 +103,30 @@ public class Player : MonoBehaviour
         //objectToRotate.localRotation = Quaternion.Euler(visualOffset);
     }
 
+    void attachGun(Weapon weapon, AttachmentPoints point)
+    {
+        int index = (int)point;
+        weapons[index] = weapon;
+
+        gunObjs[index] = Instantiate(weapon.prefab, new Vector3(0, 0, 0), new Quaternion());
+
+        if (point == AttachmentPoints.leftPoint)
+        {
+            gunObjs[index].transform.parent = leftPoint.transform;
+        }
+        else if (point == AttachmentPoints.topPoint)
+        {
+            gunObjs[index].transform.parent = topPoint.transform;
+        }
+        else
+        {
+            gunObjs[index].transform.parent = rightPoint.transform;
+        }
+        gunObjs[index].transform.localRotation = new Quaternion();
+        gunObjs[index].transform.localPosition = new Vector3(0, 0, 0);
+
+        guns[index] = gunObjs[index].GetComponent<Gun>();
+    }
     IEnumerator FalseAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
