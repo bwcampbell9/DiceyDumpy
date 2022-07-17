@@ -564,7 +564,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.070889026, y: 0.000000016643243, z: 0.000000001182799, w: 0.9974842}
+  m_LocalRotation: {x: -0.07088901, y: -0.000000018227157, z: -0.0000000012953638, w: 0.9974842}
   m_LocalPosition: {x: 0, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1019,7 +1019,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428294283}
-  m_LocalRotation: {x: -0.070889026, y: 0.000000016643243, z: 0.000000001182799, w: 0.9974842}
+  m_LocalRotation: {x: -0.07088901, y: -0.000000018227157, z: -0.0000000012953638, w: 0.9974842}
   m_LocalPosition: {x: 0, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1571,6 +1571,10 @@ PrefabInstance:
       propertyPath: rightPoint
       value: 
       objectReference: {fileID: 972861685}
+    - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
+      propertyPath: bulletLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 5554833445420473418, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: m_Name
       value: Player
