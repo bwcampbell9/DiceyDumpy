@@ -28,7 +28,7 @@ public class Gun : MonoBehaviour
     public Transform attackPoint;
 
     //Graphics
-    public GameObject muzzleFlash;
+    public GameObject muzzleFlash, bulletHoleGraphic;
     public TextMeshProUGUI ammunitionDisplay;
 
     //bug fixing :D
@@ -106,6 +106,8 @@ public class Gun : MonoBehaviour
 
                 if (rayHit.collider.CompareTag("Enemy"))
                     rayHit.collider.GetComponent<ShootingAi>().TakeDamage(damage);
+                Instantiate(bulletHoleGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
+                Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
             }
         }
         else
