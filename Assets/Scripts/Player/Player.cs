@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
 
     private bool rotating = false;
 
+    public Camera playerCam;
+
     void Start()
     {
         health = MAX_HEALTH;
@@ -72,6 +74,31 @@ public class Player : MonoBehaviour
         UpdateRotation();
 
         equippedSide = (Side) GetSideForward();
+
+        switch (equippedSide)
+        {
+            case Player.Side.right:
+                Weapon rightWeapon = weapons[(int)Player.AttachmentPoints.rightPoint];
+                if (rightWeapon != null && Input.GetMouseButtonDown(1))
+                {
+                    guns[(int)Player.AttachmentPoints.rightPoint].TryShoot();
+                }
+                break;
+            case Player.Side.top:
+                Weapon topWeapon = weapons[(int)Player.AttachmentPoints.topPoint];
+                if (topWeapon != null && Input.GetMouseButtonDown(1))
+                {
+                    guns[(int)Player.AttachmentPoints.topPoint].TryShoot();
+                }
+                break;
+            case Player.Side.left:
+                Weapon leftWeapon = weapons[(int)Player.AttachmentPoints.leftPoint];
+                if (leftWeapon != null && Input.GetMouseButtonDown(1))
+                {
+                    guns[(int)Player.AttachmentPoints.leftPoint].TryShoot();
+                }
+                break;
+        }
     }
 
     void UpdateRotation()
@@ -151,6 +178,7 @@ public class Player : MonoBehaviour
         gunObjs[index].transform.localPosition = new Vector3(0, 0, 0);
 
         guns[index] = gunObjs[index].GetComponent<Gun>();
+        guns[index].fpsCam = playerCam;
     }
     IEnumerator FalseAfterTime(float time)
     {

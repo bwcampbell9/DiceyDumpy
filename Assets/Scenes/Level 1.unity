@@ -1550,7 +1550,7 @@ PrefabInstance:
     - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: wep
       value: 
-      objectReference: {fileID: 11400000, guid: 499690f7915bb0c4895b3ac29ddd46f6, type: 2}
+      objectReference: {fileID: 11400000, guid: 1c527dac163f87147a49d8e6a2b4e283, type: 2}
     - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: wep2
       value: 
@@ -1567,6 +1567,10 @@ PrefabInstance:
       propertyPath: leftPoint
       value: 
       objectReference: {fileID: 1724374683}
+    - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
+      propertyPath: playerCam
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: rightPoint
       value: 
