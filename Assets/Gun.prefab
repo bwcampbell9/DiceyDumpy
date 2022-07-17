@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 78d208b3045bcfe4d9aba0d1fad1e187, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,25 +109,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c21433e97b30e874e829c9dfe9d44b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 100
-  magazineSize: 20
-  bulletsPerTap: 1
+  bullet: {fileID: 7881098180709516057, guid: 09c327c80c6284c40a34f74a9baa6617, type: 3}
+  shootForce: 0
+  upwardForce: 0
   timeBetweenShooting: 0.2
   spread: 0
-  range: 1000
-  relaodTime: 1
+  reloadTime: 0
   timeBetweenShots: 0
+  magazineSize: 20
+  bulletsPerTap: 1
+  damage: 100
+  range: 1000
   allowButtonHold: 1
-  shooting: 0
-  readyToShoot: 1
-  reloading: 1
   isHitScan: 0
-  bulletsLeft: 0
-  bulletsShot: 0
-  shootForce: 0
-  bullet: {fileID: 7881098180709516057, guid: 09c327c80c6284c40a34f74a9baa6617, type: 3}
+  playerRb: {fileID: 0}
+  recoilForce: 0
   fpsCam: {fileID: 0}
   attackPoint: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  bulletHoleGraphic: {fileID: 0}
+  ammunitionDisplay: {fileID: 0}
+  allowInvoke: 1
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 0

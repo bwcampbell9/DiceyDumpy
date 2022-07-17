@@ -41,7 +41,7 @@ public class DiceRoller : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        GameObject newDie = Instantiate(DicePrefab, pos, rot, transform);
+        GameObject newDie = Instantiate(DicePrefab, pos, rot);
         newDie.GetComponent<Rigidbody>().AddForce(newDie.transform.up * Random.Range(minForce, maxForce));
         newDie.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(minTorque, maxTorque), Random.Range(minTorque, maxTorque), Random.Range(minTorque, maxTorque)));
         newDie.GetComponent<Die>().SetSides(new List<DiceOption>(new[] {
