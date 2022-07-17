@@ -196,6 +196,11 @@ MonoBehaviour:
   sightBlockers:
     serializedVersion: 2
     m_Bits: 857
+  MAX_HEALTH: 100
+  health: 0
+  bulletLayer:
+    serializedVersion: 2
+    m_Bits: 128
   target: {fileID: 0}
 --- !u!65 &108256841
 BoxCollider:
@@ -711,7 +716,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.098537624, y: -0.0000000042806607, z: -4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: -0.09853762, y: 0.000000004280661, z: 4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 10, y: 6, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1161,7 +1166,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428294283}
-  m_LocalRotation: {x: -0.098537624, y: -0.0000000042806607, z: -4.238689e-10, w: 0.99513334}
+  m_LocalRotation: {x: -0.09853762, y: 0.000000004280661, z: 4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 10, y: 6, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1489,6 +1494,10 @@ PrefabInstance:
     - target: {fileID: 5554833445420473414, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
+      propertyPath: health
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5554833445420473415, guid: 4e5ef679f26c26742b608b9a6b7349ef, type: 3}
       propertyPath: bulletLayer.m_Bits

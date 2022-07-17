@@ -8,6 +8,10 @@ public class Enemy : MonoBehaviour
     public Gun gun;
     public LayerMask sightBlockers;
 
+    public int MAX_HEALTH = 100;
+    public int health;
+    public LayerMask bulletLayer;
+
     private Player player;
 
     public GameObject target;
@@ -59,6 +63,21 @@ public class Enemy : MonoBehaviour
         {
             transform.LookAt(target.transform.position);
             gun.TryShoot(gun.transform.forward);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision);
+        if (bulletLayer == (bulletLayer | (1 << collision.gameObject.layer)))
+        {
+            health -= collision.gameObject.GetComponent<Bullet>().explosionDamage;
+            Destroy(collision.gameObject);
+        }
+
+        if(health <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 
