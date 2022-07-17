@@ -16,6 +16,11 @@ public class Fart : MonoBehaviour
     float ellapsed = 0;
     public float FREQUENCY = 1;
 
+    float peak;
+    float step;
+    bool isHumping = false;
+    bool peaked;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +48,8 @@ public class Fart : MonoBehaviour
             {
                 fart();
             }
+
+            hump();
         }
 
         if (isFarting)
@@ -61,6 +68,42 @@ public class Fart : MonoBehaviour
 
             rb.AddForce(force * cubeTransform.forward);
         }
+    }
+
+    void hump()
+    {
+        if (!isHumping)
+        {
+            peaked = false;
+            peak = Random.Range(0.6f, 0.8f);
+            step = Random.Range(0.01f, 0.05f);
+            isHumping = true;
+        }
+
+        if (!peaked)
+        {
+            if (chance < peak)
+            {
+                chance += step;
+            }
+            else
+            {
+                peaked = true;
+            }
+        }
+        else
+        {
+            if (chance > 0.1)
+            {
+                chance -= step;
+            }
+            else
+            {
+                isHumping = false;
+            }
+        }
+
+
     }
 
     void fart()
